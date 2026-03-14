@@ -38,17 +38,17 @@ Ici, ce qui nous intéresse, c'est de trouver un mot de passe qui pourrait nous 
 Sous Linux, le dossier contenant les mots de passe utilisateurs est '/etc/passwd'. Pour Windows, le dossier est 'C:\windows\system32\drivers\etc\hosts'.
 
 Pour savoir si la faille XXE est bien présente, on introduit le payload suivant après la balise XML :
-<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/windows/win.ini'>]>
+`<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/windows/win.ini'>]>`
 
 On obtient alors plusieurs fichiers dans la réponse, indiquant bel et bien une faille XXE.
 On peut désormais se rendre dans les fichiers de l'utilisateur Daniel et tenter de découvrir ses fichiers pouvant peut-être nous mener à une escalade de privilèges.
 
 Après quelques recherches, on tombe sur un dossier `.ssh`, contenant en son sein une clé RSA. Nous pouvons la faire apparaître dans la réponse du navigateur via le payload suivant :
-<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/users/daniel/.ssh/id_rsa'>]>
+`<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/users/daniel/.ssh/id_rsa'>]>`
 
 Bingo !
 Enregistrons cette clé en la copiant-collant dans un fichier sur notre système, modifions ses privilèges afin qu'elle puisse être lue par SSH, puis essayons de nous connecter via SSH au serveur via cette commande :
-ssh daniel@{target_IP} -i {nom-du-fichier}
+`ssh daniel@{target_IP} -i {nom-du-fichier}`
 
 
 ## Accès initial (user flag)
