@@ -122,8 +122,15 @@ Un petit `type root.txt`, et on peut récupérer le root flag.
 
 
 ## Pourquoi ça marche
-Une simple faille web peut mener à une compromission entière d'un système.
-Ici, un simple formulaire XML mal sécurisé, ainsi qu'un petit indice dans les données HTML nous ont permis de nous connecter au serveur directement, compromettant la sécurité entière du système.
+La vulnérabilité XXE exploite un parseur XML mal configuré qui autorise le traitement d'entités externes. Ici, l'application accepte et parse directement les entrées XML de l'utilisateur sans restriction, permettant la lecture de fichiers arbitraires sur le système hôte.
+
+Cette faille initiale expose la clé SSH privée de Daniel, stockée dans un répertoire accessible via l'application — une erreur de configuration critique qui transforme une faille web en accès système complet.
+
+L'escalade de privilèges est rendue possible par une mauvaise gestion des permissions sur `job.bat` : le groupe `BUILTIN\Users` dispose d'un contrôle total sur ce fichier, exécuté automatiquement par une tâche planifiée avec des droits administrateur. Un attaquant peut donc réécrire ce script pour y injecter une commande arbitraire — ici une reverse shell — qui s'exécutera avec les privilèges les plus élevés du système.
+
+**Kill chain :**
+XXE → lecture id_rsa → SSH daniel → icacls job.bat (Full Control) → 
+injection nc64.exe → reverse shell Administrator
 
 
 ## Ressources
