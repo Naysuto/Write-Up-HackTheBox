@@ -8,3 +8,4 @@ de ma progression en pentest web.
 |---|---|---|---|
 | Markup | Windows | Easy | XXE, File Permissions |
 | Validation | Linux | Easy | Second-Order SQLi, RCE |
+| Horizontall | Linux | Easy | Exploitation CVEs, RCE |
